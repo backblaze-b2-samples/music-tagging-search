@@ -1,0 +1,26 @@
+{
+  "name": "music-tagging-search",
+  "private": true,
+  "scripts": {
+    "doctor": "node scripts/doctor.mjs",
+    "predev": "node scripts/doctor.mjs",
+    "dev": "sh scripts/dev.sh",
+    "dev:web": "pnpm --filter @music-tagging-search/web dev",
+    "dev:api": "cd services/api && .venv/bin/uvicorn main:app --reload --port ${API_PORT:-8000}",
+    "build": "pnpm --filter @music-tagging-search/web build",
+    "typecheck": "pnpm --filter @music-tagging-search/web typecheck",
+    "lint": "pnpm --filter @music-tagging-search/web lint",
+    "lint:api": "cd services/api && .venv/bin/ruff check .",
+    "test:api": "cd services/api && .venv/bin/python -m pytest",
+    "check:structure": "cd services/api && .venv/bin/python -m pytest tests/test_structure.py -v",
+    "test:e2e": "pnpm --filter @music-tagging-search/web exec playwright test",
+    "analyze": "cd services/api && .venv/bin/python scripts/analyze.py"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  },
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
+  }
+}
