@@ -36,10 +36,14 @@ class Settings(BaseSettings):
     # laion-clap checkpoint name passed to laion_clap.CLAP_Module. The weights
     # are fetched once from a public CDN on first use (keyless).
     clap_model: str = "630k-audioset-best.pt"
-    # Directory holding the optional Essentia-TensorFlow genre/mood models.
-    # Populated by scripts/fetch-models.sh. Analysis degrades gracefully when
-    # the files are absent.
+    # Directory holding the Essentia-TensorFlow genre/mood models. On first
+    # analysis the backend fetches them here automatically (keyless, one-time);
+    # scripts/fetch-models.sh can pre-populate it for offline runs.
     essentia_models_dir: str = "data/essentia-models"
+    # Auto-fetch the genre/mood models on first analysis if they're missing.
+    # Set false (ESSENTIA_AUTO_FETCH=false) for fully offline/air-gapped runs;
+    # analysis then degrades to model-free MIR (genre/mood left null).
+    essentia_auto_fetch: bool = True
     # Local working dir for the LanceDB index pulled from / pushed to B2.
     index_cache_dir: str = "data/index-cache"
 

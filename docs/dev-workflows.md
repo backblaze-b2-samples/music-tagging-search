@@ -7,10 +7,12 @@ Engineering workflows for this repo.
 
 - **Heavy deps**: `pip install -r requirements.txt` pulls Essentia, laion-clap,
   LanceDB, librosa — the first install takes a few minutes.
-- **Optional models**: `bash scripts/fetch-models.sh` downloads the Essentia
-  genre/mood models (keyless, one-time). Analysis works without them — BPM,
-  key/scale, duration, loudness, and CLAP embeddings are all model-free.
-- **First analysis** downloads the CLAP weights once (public CDN, keyless).
+- **Genre/mood models**: auto-fetched on the first analysis (keyless, one-time,
+  ~90 MB). `bash scripts/fetch-models.sh` pre-fetches the same files for offline
+  machines; pair it with `ESSENTIA_AUTO_FETCH=false` to disable runtime fetching.
+  Either way BPM, key/scale, duration, loudness, and CLAP embeddings are
+  model-free and run without these files.
+- **First analysis** also downloads the CLAP weights once (public CDN, keyless).
 - **Run the worker**: `pnpm analyze` batch-analyzes un-analyzed tracks under
   `tracks/` and refreshes the B2 index. Re-running skips already-analyzed tracks.
 - **Engine boundary**: new ML code goes in `services/api/app/service/engines/`.

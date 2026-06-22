@@ -13,8 +13,8 @@ get two things on top of your catalog:
   the catalog by how well it matches.
 
 Everything runs on **local open-source models — there is no second API key. Your
-only credentials are for Backblaze B2.** First run downloads the CLAP weights
-(and, optionally, the Essentia genre/mood models) once from public CDNs.
+only credentials are for Backblaze B2.** The first analysis downloads the CLAP
+weights and the Essentia genre/mood models once from public CDNs (keyless).
 
 ## Why B2 is the interesting part
 
@@ -33,8 +33,8 @@ index/        the consolidated CLAP embedding index (embeddings.npz)
 ## The pipeline (6 steps)
 
 1. **Ingest** — drag-drop audio upload (audio-only), stored under `tracks/`.
-2. **Extract** — Essentia computes BPM, key/scale, duration, loudness (and genre/mood
-   when the optional models are present).
+2. **Extract** — Essentia computes BPM, key/scale, duration, loudness, genre, and
+   mood (genre/mood via pretrained models auto-fetched on first analysis).
 3. **Embed** — CLAP turns each track into a semantic audio embedding.
 4. **Store** — the per-track features land in `features/<id>.json` on B2.
 5. **Index** — the embedding is upserted into a consolidated index synced to B2 (`index/`).
@@ -79,14 +79,17 @@ pip install -r requirements.txt
 cd ../..
 ```
 
-**3. (Optional) Fetch the Essentia genre/mood models**
+**3. (Optional) Pre-fetch the Essentia genre/mood models**
 
 ```bash
 bash scripts/fetch-models.sh
 ```
 
-Analysis works fine without these — BPM, key/scale, duration, loudness, and CLAP
-embeddings are all model-free. The fetch script only adds the genre/mood tags.
+You normally don't need this — the backend auto-fetches the genre/mood models on
+the first analysis (keyless, one-time, ~90 MB). Run the script to warm the cache
+ahead of time, or for an offline machine (then set `ESSENTIA_AUTO_FETCH=false`).
+Either way, BPM, key/scale, duration, loudness, and CLAP embeddings are all
+model-free and never need these files.
 
 **4. Add your B2 credentials**
 

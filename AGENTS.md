@@ -34,9 +34,9 @@ B2 byte goes through the single boto3 client in `repo/b2_client.py`, so the cust
 user agent always holds. `boto3` must never appear outside `repo/` (enforced by a
 structural test).
 
-## 2. Building on This Starter Kit
+## 2. Building on This App
 
-When this repo is used as the foundation for a new app, the following pieces are part of the starter contract — keep them. Adapt only what the new use case actually requires.
+When this repo is used as the foundation for a new app, the following pieces are part of the base contract — keep them. Adapt only what the new use case actually requires.
 
 **Keep as-is (do not strip, rename, or replace)**
 - **UI kit / design system.** `apps/web/src/components/ui/` (shadcn primitives), the design tokens in `apps/web/src/app/globals.css`, and the `/design` reference page. Build new screens with these primitives; never edit the generated `components/ui/` files directly. Restyling happens through tokens in `globals.css`.

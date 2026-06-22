@@ -3,8 +3,9 @@
 
 ## Purpose
 Extract musical features from each track with Essentia (BPM, key/scale, duration,
-loudness, and optional genre/mood) and a semantic embedding with CLAP, then persist
-the features to B2 and add the embedding to the index.
+loudness, genre, and mood) and a semantic embedding with CLAP, then persist
+the features to B2 and add the embedding to the index. Genre and mood come from
+pretrained Discogs-EffNet models that are auto-fetched on first analysis.
 
 ## Used By
 - UI: `/library` Analyze action
@@ -13,7 +14,7 @@ the features to B2 and add the embedding to the index.
 
 ## Core Functions
 - `services/api/app/service/analysis.py` — `analyze_track()` orchestration, `load_features()`
-- `services/api/app/service/engines/essentia_features.py` — `extract_features()` (BPM, key/scale, loudness, optional genre/mood)
+- `services/api/app/service/engines/essentia_features.py` — `extract_features()` (BPM, key/scale, loudness, genre/mood); `ensure_models()` auto-fetches the genre/mood weights
 - `services/api/app/service/engines/clap_embed.py` — `embed_audio()` (CLAP audio embedding)
 - `services/api/app/repo/b2_client.py` — `download_file()`, `put_json()`, `put_bytes()`, `download_file()` (index)
 
@@ -33,7 +34,10 @@ the features to B2 and add the embedding to the index.
 - `repo.download_file(track_key)` pulls the audio bytes from B2
 - Bytes are written to a local temp file (engines never see B2)
 - Essentia computes BPM (RhythmExtractor2013), key/scale (KeyExtractor), duration, loudness
-- If the optional Essentia genre/mood models are present, they run too; otherwise skipped
+- `ensure_models()` fetches the genre/mood weights if missing, then the shared
+  Discogs-EffNet backbone embeds the track once; the genre head yields a coarse
+  genre (Discogs `Parent---Child` collapsed to the parent) and the five binary
+  mood heads (happy/sad/aggressive/relaxed/party) yield the strongest as `mood`
 - CLAP embeds the track into the joint audio↔text space
 - `repo.put_json(features/<id>.json, features)` persists the features
 - The embedding is upserted into the consolidated index and synced to B2
@@ -42,9 +46,10 @@ the features to B2 and add the embedding to the index.
 ## Edge Cases
 - Essentia not importable or extraction fails → features degrade to empty, pipeline continues
 - CLAP embedding fails → features still persisted, `embedded=False`, track not searchable until re-run
-- Optional genre/mood models absent → those tags are null (BPM/key/etc. still produced)
+- Genre/mood models can't be fetched (offline, or `ESSENTIA_AUTO_FETCH=false`) →
+  those tags are null (BPM/key/etc. still produced); fetch is attempted once per process
 - Track missing from B2 → API returns 502 / worker logs and skips
-- First analysis run → CLAP weights downloaded once (public, keyless)
+- First analysis run → CLAP weights + genre/mood models downloaded once (public, keyless)
 
 ## UX States
 - Library shows "Not analyzed yet" until features exist; "Analyze"/"Re-analyze" button drives it

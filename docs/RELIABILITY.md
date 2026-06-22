@@ -30,9 +30,12 @@ Reliability expectations and practices for this project.
 
 - File / track listing returns an empty list (not an error) when B2 has no objects
 - Audio probe failures at upload don't block the upload (partial metadata returned)
-- **Model-absent degradation**: if the optional Essentia genre/mood models aren't
-  present, analysis still produces BPM, key/scale, duration, loudness, and the CLAP
-  embedding — only the genre/mood tags are null
+- **Model-absent degradation**: the Essentia genre/mood models are auto-fetched
+  on first analysis (keyless). If they can't be obtained — offline machine, or
+  `ESSENTIA_AUTO_FETCH=false` — analysis still produces BPM, key/scale, duration,
+  loudness, and the CLAP embedding; only the genre/mood tags are null. The
+  download is attempted once per process, so an unreachable CDN doesn't stall
+  every track in a batch run
 - If Essentia isn't importable or feature extraction fails, the pipeline persists
   whatever it has and continues; a failed CLAP embedding leaves the track
   un-searchable (`embedded=False`) but keeps its features

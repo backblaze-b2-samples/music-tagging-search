@@ -13,8 +13,15 @@ python-magic>=0.4.27
 essentia-tensorflow>=2.1b6.dev1110
 # CLAP joint audio<->text embeddings for similarity + semantic search.
 laion-clap>=1.1.6
-# Vector index built locally and synced to B2 via the repo S3 client.
-lancedb>=0.13.0
+# CLAP's runtime backend: laion-clap imports torch/torchvision at analyze/embed
+# time but doesn't always resolve them transitively, so declare them explicitly.
+torch>=2.12.0
+torchvision>=0.27.0
+# Vector index: ships as a single NumPy `.npz` manifest built locally and synced
+# to B2 via the repo S3 client (reproducible from a fresh clone; every byte stays
+# on the custom-UA client). `lancedb` is reserved for a future ANN transport and
+# is intentionally NOT a runtime dependency yet — see docs/features/embedding-index.md
+# and the tech-debt tracker. Add it back when the LanceDB path is implemented.
 # Audio decode/resample for feeding CLAP, and numeric ops for the index.
 librosa>=0.10.2
 soundfile>=0.12.1
