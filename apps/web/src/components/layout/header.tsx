@@ -19,6 +19,8 @@ import { CommandPalette } from "./command-palette";
 const pageTitles: Record<string, string> = {
   "/": "Dashboard",
   "/upload": "Upload",
+  "/library": "Library",
+  "/search": "Search",
   "/files": "Files",
   "/settings": "Settings",
   "/design": "Design System",
@@ -57,7 +59,7 @@ export function Header() {
               href="/"
               className="text-nav-foreground/80 hover:text-nav-foreground font-medium"
             >
-              oss-starter-kit
+              Music Tagging &amp; Search
             </BreadcrumbLink>
           </BreadcrumbItem>
           {pathname !== "/" && (
