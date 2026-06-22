@@ -16,6 +16,24 @@ Everything runs on **local open-source models — there is no second API key. Yo
 only credentials are for Backblaze B2.** The first analysis downloads the CLAP
 weights and the Essentia genre/mood models once from public CDNs (keyless).
 
+## What it looks like
+
+**Dashboard** — catalog stats (tracks, analyzed, embeddings indexed, storage used), a genre-distribution chart, and a recently-analyzed table.
+
+![Dashboard with track/analyzed/embedding/storage cards, a genre-distribution chart, and a recently-analyzed table](docs/images/dashboard.png)
+
+**Library** — the `tracks/`-scoped explorer where each track shows BPM/key/genre/mood tags with Play, Re-analyze, and Find-similar actions.
+
+![Music library listing tracks with BPM/key/genre/mood tags and Play, Re-analyze, and Find similar actions](docs/images/library.png)
+
+**Find similar** — opening Find-similar on a track ranks the closest-sounding songs in the catalog by audio-embedding match percentage.
+
+![Find-similar dialog ranking neighboring tracks by percentage match for the selected song](docs/images/find-similar.png)
+
+**Semantic search** — type a vibe in plain English and CLAP ranks the catalog by how well each track matches the description.
+
+![Semantic search results for a plain-English query, ranked by percentage match](docs/images/search.png)
+
 ## Why B2 is the interesting part
 
 Source audio, dense per-track feature JSON, and a continuously growing embedding
@@ -39,19 +57,6 @@ index/        the consolidated CLAP embedding index (embeddings.npz)
 4. **Store** — the per-track features land in `features/<id>.json` on B2.
 5. **Index** — the embedding is upserted into a consolidated index synced to B2 (`index/`).
 6. **Search** — find-similar (audio→audio) and semantic search (text→audio) query that index.
-
-## What it looks like
-
-**Dashboard** — catalog stats, genre distribution, recently analyzed tracks:
-
-![Dashboard with track/analyzed/embedding/storage cards, a genre chart, and a recently-analyzed table](docs/images/music-tagging-search-dashboard.png)
-
-**Library** — the `tracks/`-scoped explorer with inline playback, tags, and actions:
-
-![Music library showing track rows with BPM/key/genre/mood tags, inline players, Analyze and Find similar actions](docs/images/music-tagging-search-library.png)
-
-> Screenshots are captured post-scaffold against a real bucket; the files above are
-> placeholders until then.
 
 ## Quick Start
 
