@@ -1,6 +1,7 @@
 {
   "name": "music-tagging-search",
   "private": true,
+  "packageManager": "pnpm@9.15.9",
   "scripts": {
     "doctor": "node scripts/doctor.mjs",
     "predev": "node scripts/doctor.mjs",

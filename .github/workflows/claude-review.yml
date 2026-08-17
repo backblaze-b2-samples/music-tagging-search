@@ -45,7 +45,9 @@ jobs:
 
       - name: Enable pnpm
         if: ${{ hashFiles('apps/web/package.json') != '' }}
-        run: corepack enable
+        run: |
+          corepack enable
+          corepack prepare pnpm@9.15.9 --activate
 
       - name: Install frontend dependencies
         if: ${{ hashFiles('apps/web/package.json') != '' }}
