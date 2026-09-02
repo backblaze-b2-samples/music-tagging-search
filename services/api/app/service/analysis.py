@@ -23,6 +23,8 @@ from app.types import AnalyzedTrack, TrackFeatures
 logger = logging.getLogger(__name__)
 
 _INDEX_KEY = f"{settings.index_prefix}embeddings.npz"
+_DEFAULT_AUDIO_EXTENSION = "audio"
+_MAX_EXTENSION_LENGTH = 10
 
 
 def _features_key(track_key: str) -> str:
@@ -34,7 +36,10 @@ def _features_key(track_key: str) -> str:
 
 
 def _suffix(track_key: str) -> str:
-    ext = track_key.rsplit(".", 1)[-1] if "." in track_key else "audio"
+    name = os.path.basename(track_key)
+    ext = name.rsplit(".", 1)[-1].lower() if "." in name else _DEFAULT_AUDIO_EXTENSION
+    if not ext.isalnum() or len(ext) > _MAX_EXTENSION_LENGTH:
+        ext = _DEFAULT_AUDIO_EXTENSION
     return f".{ext}"
 
 
