@@ -38,7 +38,7 @@ def _features_key(track_key: str) -> str:
 def _suffix(track_key: str) -> str:
     name = os.path.basename(track_key)
     ext = name.rsplit(".", 1)[-1].lower() if "." in name else _DEFAULT_AUDIO_EXTENSION
-    if not ext.isalnum() or len(ext) > _MAX_EXTENSION_LENGTH:
+    if not ext.isascii() or not ext.isalnum() or len(ext) > _MAX_EXTENSION_LENGTH:
         ext = _DEFAULT_AUDIO_EXTENSION
     return f".{ext}"
 
